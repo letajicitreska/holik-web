@@ -132,7 +132,7 @@ a:hover{opacity:.7}
 
 /* contact */
 .foot{background:var(--fb);color:var(--fi);display:flex;flex-direction:column;gap:42px}
-.mega{font-size:clamp(60px,12.5vw,200px);line-height:.88;letter-spacing:-.05em;color:var(--fb);-webkit-text-stroke:2.5px var(--fi);paint-order:stroke fill;transition:color 2.4s ease}
+.mega{font-size:clamp(60px,12.5vw,200px);line-height:.88;letter-spacing:-.05em;color:var(--fb);-webkit-text-stroke:2.5px var(--fi);paint-order:stroke fill;transition:color 3.2s ease-in-out}
 .mega.lit{color:var(--fi)}
 @media (prefers-reduced-motion:reduce){.mega{color:var(--fi)}}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:28px 40px;font-size:17px;line-height:1.55}
@@ -324,8 +324,19 @@ const nb = t => t.replace(/(^|[\s\u00a0(„])([vVsSzZkKoOuUaAiI])\s+/g, '$1$2\u0
 document.getElementById('clients').innerHTML = CLIENTS.map(c => c[0] === '~' ? '<span class="cl more">' + c.slice(1) + '</span>' : '<span class="cl">' + c + '</span>').join('&nbsp;<span class="sep">/</span> ');
 
 const mega = document.querySelector('.mega');
-if (q.get('static') === '1' || !('IntersectionObserver' in window)) mega.classList.add('lit');
-else new IntersectionObserver((es, o) => { es.forEach(e => { if (e.isIntersecting) { setTimeout(() => mega.classList.add('lit'), 500); o.disconnect(); } }); }, { threshold: 0.6 }).observe(mega);
+if (q.get('static') === '1') mega.classList.add('lit');
+else {
+  const lightUp = () => {
+    const r = mega.getBoundingClientRect();
+    const atEnd = innerHeight + scrollY >= document.documentElement.scrollHeight - 30;
+    if ((r.top < innerHeight * 0.55 && r.bottom > 0) || atEnd) {
+      removeEventListener('scroll', lightUp);
+      setTimeout(() => mega.classList.add('lit'), 700);
+    }
+  };
+  addEventListener('scroll', lightUp, { passive: true });
+  lightUp();
+}
 
 if (q.get('static') === '1') document.body.classList.add('static');
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches || q.get('static') === '1';
