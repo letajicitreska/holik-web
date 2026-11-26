@@ -380,9 +380,9 @@ function render(i) {
   tA.style.opacity = 0; tB.style.opacity = 0;
   runBar(10100);
   requestAnimationFrame(() => { show(A); tA.style.opacity = 1; });
-  later(3400, () => {
+  later(2800, () => {
     show(B); tB.style.opacity = 1;
-    later(5900, () => { hide(A); hide(B); tA.style.opacity = 0; tB.style.opacity = 0; later(800, () => render(idx + 1)); });
+    later(4800, () => { hide(A); hide(B); tA.style.opacity = 0; tB.style.opacity = 0; later(800, () => render(idx + 1)); });
   });
 }
 document.getElementById('prev').onclick = () => render(idx - 1);
